@@ -33,18 +33,35 @@ Unlike traditional approaches that use only one preprocessing method, this proje
 ## 📂 Project Structure
 
 ```
+## 📂 Project Structure
+
+```text
 ANPR-Self-Optimizing-Preprocessing/
 │
 ├── docs/
+│   ├── architecture.md
+│   └── images/
+│       ├── workflow.png
+│       ├── architecture.png
+│       ├── preprocessing_pipeline.png
+│       ├── preprocessing_strategies.png
+│       ├── confidence_selection.png
+│       ├── character_correction.png
+│       └── complete_pipeline.png
+│
 ├── models/
+│   ├── yolov8n.pt
+│   └── plates_model_v1.pt
+│
 ├── sample_images/
+│
 ├── output/
+│
 ├── src/
 │   └── main.py
 │
 ├── requirements.txt
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ## ▶️ Installation
