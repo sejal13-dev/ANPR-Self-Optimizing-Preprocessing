@@ -26,10 +26,11 @@ import torch                   # Used by EasyOCR backend
 # ==========================================================
 
 # Pretrained vehicle detection model
-vehicle_model = YOLO("yolov8n")
+vehicle_model = YOLO("../models/yolov8n.pt")
+
 
 # Custom trained license plate detection model
-plate_model = YOLO("plates_model_v1.pt")
+plate_model = YOLO("../models/plates_model_v1.pt")
 
 
 # ==========================================================
