@@ -26,4 +26,4 @@ This project follows semantic versioning.
 - Contribution guidelines
 - Code of Conduct
 - MIT License
-- Initial stable GitHub release
+- Initial stable GitHub releasegit add .

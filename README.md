@@ -62,45 +62,62 @@ This repository demonstrates the preprocessing and OCR enhancement module indepe
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```text
 ANPR-Self-Optimizing-Preprocessing/
 │
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   │
+│   ├── workflows/
+│   │   └── python-ci.yml
+│   │
+│   └── PULL_REQUEST_TEMPLATE.md
+│
 ├── docs/
 │   ├── architecture.md
-│   ├── installation.md
-│   ├── usage.md
-│   ├── project-structure.md
-│   ├── future-work.md
 │   ├── contribution.md
+│   ├── future-work.md
+│   ├── installation.md
+│   ├── project-structure.md
+│   ├── usage.md
+│   │
 │   └── images/
 │       ├── architecture.png
-│       ├── workflow.png
-│       ├── preprocessing.png
-│       ├── ocr-selection.png
-│       ├── queue-system.png
 │       ├── comparison.png
-│       └── evaluation.png
+│       ├── evaluation.png
+│       ├── ocr-selection.png
+│       ├── preprocessing.png
+│       ├── queue-system.png
+│       └── workflow.png
+│
+├── incoming_images/
+│   └── .gitkeep
 │
 ├── models/
-│   ├── yolov8n.pt
-│   └── plates_model_v1.pt
+│   ├── plates_model_v1.pt
+│   └── yolov8n.pt
+│
+├── processed_output/
+│   └── .gitkeep
 │
 ├── sample_images/
 │
-├── output/
-│
 ├── src/
+│   ├── demo.py
 │   └── main.py
 │
-├── requirements.txt
-├── LICENSE
 ├── .gitignore
-└── README.md
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+└── requirements.txt
 ```
-
----
 
 # 📑 Table of Contents
 
@@ -294,57 +311,84 @@ python src/main.py
 
 ---
 
-# ▶️ Usage
+## ▶️ Usage
 
-The complete execution flow is shown below.
+### Start the Application
 
-### Step 1
-
-Place one or more vehicle images inside:
-
-```
-sample_images/
-```
-
----
-
-### Step 2
-
-Run
+Run the project using:
 
 ```bash
 python src/main.py
 ```
 
----
+### Provide Input
 
-### Step 3
+Place one or more vehicle images inside the `incoming_images/` folder.
 
-The application performs the following sequence automatically:
+The application continuously monitors this folder for newly added images.
 
-- Load Vehicle Image
-- Detect License Plate
-- Crop License Plate
-- Apply Four Preprocessing Strategies
-- Execute EasyOCR
-- Compare OCR Confidence
-- Select Best Strategy
-- Apply Character Correction
-- Validate Indian License Plate
-- Display Final Result
+### Processing Pipeline
 
----
+For every detected vehicle image, the system automatically performs:
 
-### Step 4
+- Vehicle image loading
+- License plate detection using YOLOv8
+- License plate cropping
+- Four preprocessing strategies
+  - Grayscale + OTSU + Morphology
+  - CLAHE + Thresholding
+  - Gamma Correction
+  - Resolution Enhancement + Sharpening
+- OCR using EasyOCR
+- Confidence-based preprocessing selection
+- Character correction
+- Indian license plate format validation
+- Final license plate recognition
 
-Generated results are saved inside
+## 📊 Output
 
+For each processed vehicle image, the system generates:
+
+- Detected vehicle image
+- Cropped license plate image
+- Best preprocessed license plate image
+- OCR recognized license plate text
+- OCR confidence score
+- Selected preprocessing strategy
+
+The processed images are automatically saved inside the `processed_output/` folder.
+
+Example console output:
+
+```text
+Using CPU. Note: This module is much faster with a GPU.
+
+Waiting for incoming images...
+ANPR System Started Successfully
+
+New image received: car1.jpg
+
+Worker processing image...
+
+Strategy: clahe
+Detected Plate: MH12AB1234
+
+Saved vehicle: processed_output/vehicle_0.jpg
+Plate text: MH12AB1234
+
+--------------------------------
 ```
-output/
+
+Example generated files:
+
+```text
+processed_output/
+├── vehicle_0.jpg
+├── plate_0.jpg
+├── vehicle_1.jpg
+├── plate_1.jpg
+└── ...
 ```
-
----
-
 # 📸 Sample Processing Flow
 
 The preprocessing module follows the pipeline below.
