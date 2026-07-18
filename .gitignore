@@ -1,17 +1,28 @@
+# ==========================
 # Python
+# ==========================
 __pycache__/
-*.pyc
+*.py[cod]
 
+# ==========================
 # VS Code
+# ==========================
 .vscode/
 
-# Output images
-output/
-
-# Python virtual environment
+# ==========================
+# Virtual Environment
+# ==========================
 venv/
 .env
 
-# System files
+# ==========================
+# Generated Output Images
+# ==========================
+processed_output/*
+!processed_output/.gitkeep
+
+# ==========================
+# System Files
+# ==========================
 .DS_Store
 Thumbs.db
