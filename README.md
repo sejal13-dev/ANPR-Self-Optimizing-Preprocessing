@@ -9,30 +9,32 @@
 
 > **This repository contains my individual contribution to a team-based Automatic Number Plate Recognition (ANPR) project.**
 >
-> My contribution focuses on designing and implementing a **Self-Optimizing Preprocessing Pipeline** that enhances OCR accuracy by automatically evaluating multiple preprocessing strategies and selecting the best result based on OCR confidence.
+> My contribution focuses on designing and implementing a **Self-Optimizing Preprocessing Pipeline** that improves OCR accuracy by automatically evaluating multiple preprocessing strategies and selecting the best result based on OCR confidence.
 
 ---
 
 # 📌 Project Overview
 
-Automatic Number Plate Recognition (ANPR) systems often experience reduced OCR accuracy due to varying environmental conditions such as poor lighting, shadows, blur, rain, fog, and low-resolution license plates.
+Automatic Number Plate Recognition (ANPR) systems often experience reduced OCR accuracy due to challenging environmental conditions such as poor lighting, motion blur, shadows, rain, fog, and low-resolution license plates.
 
-Instead of relying on a single preprocessing technique, this project introduces a **Self-Optimizing Preprocessing Framework** that applies multiple preprocessing strategies to each detected license plate image, performs OCR on every processed result, compares the OCR confidence scores, and automatically selects the best output.
+Traditional ANPR pipelines generally rely on a single preprocessing technique before OCR. However, a single technique rarely performs well across all real-world scenarios.
+
+This project introduces a **Self-Optimizing Preprocessing Framework** that automatically evaluates multiple preprocessing strategies for every detected license plate, performs OCR on each processed image, compares OCR confidence scores, and selects the most reliable recognition result.
 
 The module also performs character correction and Indian license plate format validation to further improve recognition accuracy.
 
-This repository demonstrates the preprocessing and OCR enhancement module independently, making it reusable in any ANPR pipeline.
+The preprocessing module has been designed as an independent component that can be integrated into larger ANPR systems.
 
 ---
 
 # 🎯 Objectives
 
 - Improve OCR accuracy using adaptive preprocessing.
-- Automatically evaluate multiple preprocessing strategies.
-- Select the best OCR output using confidence comparison.
+- Evaluate multiple preprocessing strategies automatically.
+- Select the best OCR result using confidence comparison.
 - Correct common OCR character mismatches.
 - Improve recognition under challenging environmental conditions.
-- Build a modular preprocessing pipeline that can integrate with any ANPR system.
+- Build a modular preprocessing pipeline that integrates with larger ANPR systems.
 
 ---
 
@@ -43,9 +45,11 @@ This repository demonstrates the preprocessing and OCR enhancement module indepe
 - ⚡ Self-Optimizing Strategy Selection
 - 🔍 OCR using EasyOCR
 - 📈 Confidence-Based Decision Making
-- 🔄 Character Replacement & Correction
+- 🔄 Character Correction
 - 🇮🇳 Indian License Plate Validation
 - 🧩 Modular Design for Easy Integration
+- 📂 Queue-Based Image Processing
+- 📊 OCR Confidence Evaluation
 
 ---
 
@@ -55,12 +59,10 @@ This repository demonstrates the preprocessing and OCR enhancement module indepe
 |------------|---------|
 | Python | Core Programming Language |
 | OpenCV | Image Processing |
-| YOLOv8 | License Plate Detection Integration |
+| YOLOv8 | License Plate Detection |
 | EasyOCR | Optical Character Recognition |
 | NumPy | Numerical Operations |
 | PyTorch | Deep Learning Backend |
-
----
 
 ## 📂 Project Structure
 
@@ -71,10 +73,8 @@ ANPR-Self-Optimizing-Preprocessing/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
 │   │   └── feature_request.md
-│   │
 │   ├── workflows/
 │   │   └── python-ci.yml
-│   │
 │   └── PULL_REQUEST_TEMPLATE.md
 │
 ├── docs/
@@ -84,7 +84,6 @@ ANPR-Self-Optimizing-Preprocessing/
 │   ├── installation.md
 │   ├── project-structure.md
 │   ├── usage.md
-│   │
 │   └── images/
 │       ├── architecture.png
 │       ├── comparison.png
@@ -95,7 +94,13 @@ ANPR-Self-Optimizing-Preprocessing/
 │       └── workflow.png
 │
 ├── incoming_images/
-│   └── .gitkeep
+│   ├── car-1.jpg
+│   ├── car-3.jpeg
+│   ├── car-4.jpg
+│   ├── car-5.jpg
+│   ├── car-6.jpg
+│   ├── car-7.jpeg
+│   └── car-9.jpg
 │
 ├── models/
 │   ├── plates_model_v1.pt
@@ -103,8 +108,6 @@ ANPR-Self-Optimizing-Preprocessing/
 │
 ├── processed_output/
 │   └── .gitkeep
-│
-├── sample_images/
 │
 ├── src/
 │   ├── demo.py
@@ -119,6 +122,8 @@ ANPR-Self-Optimizing-Preprocessing/
 └── requirements.txt
 ```
 
+---
+
 # 📑 Table of Contents
 
 - Project Overview
@@ -127,24 +132,29 @@ ANPR-Self-Optimizing-Preprocessing/
 - Technologies Used
 - Project Structure
 - System Architecture
-- Project Workflow
+- Complete Workflow
 - Self-Optimizing Preprocessing
 - OCR Confidence Selection
-- Queue Processing
+- Queue-Based Processing
 - Performance Evaluation
+- Comparison with Conventional Approach
 - Installation
 - Usage
+- Output
+- Additional Documentation
 - Future Improvements
-- Contribution
+- My Contribution
+- References
 - License
 - Author
-- Acknowledgements
 
 ---
 
 # 🏗️ System Architecture
 
-The following architecture illustrates the overall processing pipeline of the self-optimizing preprocessing module. The module receives a detected license plate image, applies multiple preprocessing strategies, performs OCR on each processed image, compares confidence scores, and returns the best recognized license plate.
+The architecture below illustrates the overall preprocessing pipeline implemented in this project.
+
+The module receives a detected license plate image, applies multiple preprocessing strategies, performs OCR on every processed image, compares OCR confidence scores, and automatically selects the most reliable recognition result.
 
 ![System Architecture](docs/images/architecture.png)
 
@@ -152,34 +162,37 @@ The following architecture illustrates the overall processing pipeline of the se
 
 # 🔄 Complete Workflow
 
-The workflow below describes how the preprocessing module fits into an ANPR pipeline.
+The complete processing workflow is shown below.
 
-1. Vehicle image is captured.
+1. Vehicle image is received.
 2. YOLOv8 detects the license plate.
 3. The detected plate is cropped.
 4. Multiple preprocessing strategies are applied.
 5. EasyOCR extracts text from every processed image.
-6. OCR confidence scores are compared.
+6. OCR confidence scores are evaluated.
 7. The best preprocessing strategy is selected automatically.
-8. Character correction and validation are performed.
-9. The final license plate is returned.
+8. Character correction is performed.
+9. Indian license plate validation is applied.
+10. Final license plate text is returned.
 
 ![Workflow](docs/images/workflow.png)
 
 ---
 
-# 🖼️ Self-Optimizing Preprocessing Pipeline
+# 🖼️ Self-Optimizing Preprocessing
 
-Unlike traditional ANPR systems that rely on a single preprocessing technique, this module evaluates several preprocessing methods before OCR.
+Unlike conventional ANPR systems that depend on a single preprocessing technique, this module evaluates multiple preprocessing methods before OCR.
 
-The implemented preprocessing strategies include:
+Implemented preprocessing strategies include:
 
 - Static Preprocessing (Grayscale + OTSU + Morphology)
 - CLAHE-Based Enhancement
-- Gamma Correction
+- Adaptive Thresholding
 - Resolution Enhancement & Sharpening
 
-Each strategy generates a different processed image. OCR is performed on every output independently.
+Each processed image is independently evaluated using OCR.
+
+The preprocessing result producing the highest confidence score is selected automatically.
 
 ![Preprocessing Pipeline](docs/images/preprocessing.png)
 
@@ -189,9 +202,11 @@ Each strategy generates a different processed image. OCR is performed on every o
 
 Each preprocessed image is passed to EasyOCR.
 
-Instead of accepting the first OCR result, the module compares the confidence score of every recognized plate and automatically selects the result with the highest confidence.
+Instead of accepting the first OCR result, the module evaluates every OCR output based on confidence score and structural validation.
 
-This adaptive selection significantly improves recognition accuracy under varying environmental conditions.
+The preprocessing strategy with the highest overall score is automatically selected.
+
+This adaptive approach significantly improves OCR robustness under varying environmental conditions.
 
 ![OCR Confidence Selection](docs/images/ocr-selection.png)
 
@@ -199,11 +214,14 @@ This adaptive selection significantly improves recognition accuracy under varyin
 
 # ⚙️ Queue-Based Processing
 
-To support scalable processing, the module follows a queue-based workflow.
+The preprocessing module follows a Producer–Consumer architecture.
 
-The queue architecture allows multiple vehicle images to be processed sequentially while keeping the preprocessing module independent from other ANPR components such as APIs and databases.
+- The Producer monitors the `incoming_images/` directory.
+- Newly detected vehicle images are pushed into the processing queue.
+- The Worker thread performs preprocessing and OCR.
+- The Output thread stores processed results inside `processed_output/`.
 
-This modular design simplifies future integration with real-time systems.
+This architecture makes the preprocessing module independent and suitable for integration with larger ANPR systems.
 
 ![Queue Processing](docs/images/queue-system.png)
 
@@ -211,7 +229,7 @@ This modular design simplifies future integration with real-time systems.
 
 # 📈 Performance Evaluation
 
-The preprocessing module is evaluated using several metrics:
+The preprocessing module is evaluated using:
 
 - OCR Confidence
 - Character Recognition Accuracy
@@ -219,7 +237,7 @@ The preprocessing module is evaluated using several metrics:
 - Processing Time
 - Strategy Selection Performance
 
-These metrics help compare preprocessing strategies and demonstrate the effectiveness of the self-optimizing framework.
+These metrics demonstrate the effectiveness of the adaptive preprocessing framework.
 
 ![Performance Evaluation](docs/images/evaluation.png)
 
@@ -227,9 +245,11 @@ These metrics help compare preprocessing strategies and demonstrate the effectiv
 
 # 🔍 Comparison with Conventional Approach
 
-Traditional ANPR systems usually depend on a single preprocessing method, which may perform poorly under different lighting and environmental conditions.
+Traditional ANPR systems generally rely on a single preprocessing method.
 
-The proposed framework evaluates multiple preprocessing strategies automatically and selects the most suitable result based on OCR confidence, improving robustness and recognition performance.
+The proposed framework evaluates multiple preprocessing strategies and dynamically selects the most suitable result based on OCR confidence.
+
+This improves robustness and recognition accuracy under challenging real-world conditions.
 
 ![Comparison](docs/images/comparison.png)
 
@@ -237,30 +257,29 @@ The proposed framework evaluates multiple preprocessing strategies automatically
 
 # 💡 Key Innovation
 
-The core contribution of this project is the **Self-Optimizing Preprocessing Framework**, which:
+The core contribution of this work is the **Self-Optimizing Preprocessing Framework**, which:
 
 - Applies multiple preprocessing strategies to the same license plate.
-- Executes OCR on every processed image.
-- Compares OCR confidence scores automatically.
-- Selects the best preprocessing strategy dynamically.
-- Performs character correction and license plate validation before producing the final result.
+- Performs OCR on every processed image.
+- Compares OCR confidence scores.
+- Selects the best preprocessing strategy automatically.
+- Applies character correction.
+- Validates Indian license plate format.
+- Produces the final recognition result with improved reliability.
 
-This approach removes the need to manually choose a preprocessing technique and makes the recognition pipeline more adaptive to real-world conditions.
-
----
-
+This adaptive approach eliminates manual preprocessing selection and improves OCR performance across different environmental conditions.
 # ⚙️ Installation
 
-Follow these steps to set up the project on your local machine.
+Follow the steps below to set up the project on your local machine.
 
 ## Prerequisites
 
-Ensure the following software is installed:
+Make sure the following software is installed:
 
 - Python 3.10 or later
 - Git
-- Visual Studio Code (Recommended)
 - pip (Python Package Manager)
+- Visual Studio Code (Recommended)
 
 ---
 
@@ -270,7 +289,7 @@ Ensure the following software is installed:
 git clone https://github.com/sejal13-dev/ANPR-Self-Optimizing-Preprocessing.git
 ```
 
-Move into the project directory:
+Move into the project directory.
 
 ```bash
 cd ANPR-Self-Optimizing-Preprocessing
@@ -278,9 +297,9 @@ cd ANPR-Self-Optimizing-Preprocessing
 
 ---
 
-## Install Required Libraries
+## Install Dependencies
 
-Install all dependencies using:
+Install all required Python libraries.
 
 ```bash
 pip install -r requirements.txt
@@ -290,9 +309,9 @@ pip install -r requirements.txt
 
 ## Required Models
 
-Place the following YOLO models inside the **models/** directory.
+Place the trained YOLO models inside the `models/` directory.
 
-```
+```text
 models/
 │
 ├── yolov8n.pt
@@ -301,85 +320,77 @@ models/
 
 ---
 
-## Run the Project
+## Sample Images
 
-Execute the following command:
+The repository already includes sample vehicle images inside the `incoming_images/` folder.
 
-```bash
-python src/main.py
-```
+You can replace these images with your own test images at any time.
 
 ---
 
-## ▶️ Usage
+## Run the Application
 
-### Start the Application
-
-Run the project using:
+Start the preprocessing service using:
 
 ```bash
 python src/main.py
 ```
 
-### Provide Input
+Once the application starts, it continuously monitors the `incoming_images/` folder for new vehicle images.
 
-Place one or more vehicle images inside the `incoming_images/` folder.
+---
 
-The application continuously monitors this folder for newly added images.
+# ▶️ Usage
 
-### Processing Pipeline
+## Input
 
-For every detected vehicle image, the system automatically performs:
+The application automatically watches the `incoming_images/` folder.
 
-- Vehicle image loading
-- License plate detection using YOLOv8
-- License plate cropping
-- Four preprocessing strategies
-  - Grayscale + OTSU + Morphology
-  - CLAHE + Thresholding
-  - Gamma Correction
-  - Resolution Enhancement + Sharpening
-- OCR using EasyOCR
-- Confidence-based preprocessing selection
-- Character correction
-- Indian license plate format validation
-- Final license plate recognition
+- Images already present in the folder are processed automatically.
+- Any new image copied into the folder while the application is running is also processed automatically.
 
-## 📊 Output
+Supported image formats include:
 
-For each processed vehicle image, the system generates:
+- JPG
+- JPEG
+- PNG
 
-- Detected vehicle image
+---
+
+## Processing Pipeline
+
+For every input image, the following operations are performed:
+
+1. Vehicle Detection
+2. License Plate Detection
+3. License Plate Cropping
+4. Skew Correction
+5. Multiple Image Preprocessing
+6. OCR using EasyOCR
+7. Confidence-Based Strategy Selection
+8. Character Correction
+9. Indian License Plate Validation
+10. Final License Plate Recognition
+
+---
+
+## Output
+
+The system automatically generates:
+
+- Processed vehicle image
 - Cropped license plate image
-- Best preprocessed license plate image
-- OCR recognized license plate text
-- OCR confidence score
 - Selected preprocessing strategy
+- Recognized license plate text
+- OCR confidence information (console output)
 
-The processed images are automatically saved inside the `processed_output/` folder.
-
-Example console output:
+Processed images are saved inside:
 
 ```text
-Using CPU. Note: This module is much faster with a GPU.
-
-Waiting for incoming images...
-ANPR System Started Successfully
-
-New image received: car1.jpg
-
-Worker processing image...
-
-Strategy: clahe
-Detected Plate: MH12AB1234
-
-Saved vehicle: processed_output/vehicle_0.jpg
-Plate text: MH12AB1234
-
---------------------------------
+processed_output/
 ```
 
-Example generated files:
+Example:
 
 ```text
 processed_output/
@@ -389,75 +400,54 @@ processed_output/
 ├── plate_1.jpg
 └── ...
 ```
-# 📸 Sample Processing Flow
 
-The preprocessing module follows the pipeline below.
+---
 
-```
-Vehicle Image
-        │
-        ▼
-YOLO Plate Detection
-        │
-        ▼
-Crop License Plate
-        │
-        ▼
-Apply 4 Preprocessing Strategies
-        │
-        ▼
-EasyOCR
-        │
-        ▼
-Confidence Comparison
-        │
-        ▼
-Character Correction
-        │
-        ▼
-Final License Plate
+## Console Output
+
+A typical execution looks similar to:
+
+```text
+Using CPU. Note: This module is much faster with a GPU.
+
+Waiting for incoming images...
+
+ANPR System Started Successfully
+
+New image received: car-1.jpg
+
+Worker processing image...
+
+Strategy: clahe
+
+Detected Plate: HR26DQ5551
+
+Saved vehicle: processed_output/vehicle_0.jpg
+
+Plate text: HR26DQ5551
+
+--------------------------------
 ```
 
 ---
 
-# 📊 Expected Output
+## Notes
 
-The application displays:
-
-- Original Vehicle Image
-- Cropped License Plate
-- Selected Preprocessed Image
-- OCR Confidence Score
-- Final Recognized License Plate
-
-Example:
-
-```
-Vehicle Detected
-
-Detected Plate
-
-KA01AB1234
-
-OCR Confidence : 96.42%
-
-Selected Strategy :
-
-CLAHE + Adaptive Threshold
-```
-
----
+- The application follows a Producer–Consumer queue architecture.
+- Images are processed sequentially as they arrive.
+- The service continues running until it is stopped manually.
+- Processed images are written to the `processed_output/` directory.
 
 # 📂 Additional Documentation
 
-Detailed project documentation is available inside the **docs/** directory.
+Detailed project documentation is available inside the `docs/` directory.
 
 | Document | Description |
 |----------|-------------|
 | architecture.md | System Architecture |
 | installation.md | Installation Guide |
 | usage.md | Usage Guide |
-| project-structure.md | Folder Structure |
+| project-structure.md | Project Folder Structure |
 | future-work.md | Planned Enhancements |
 | contribution.md | Individual Contribution |
 
@@ -465,71 +455,64 @@ Detailed project documentation is available inside the **docs/** directory.
 
 # 📈 Performance Highlights
 
-The proposed preprocessing module provides the following advantages:
+The proposed preprocessing framework provides the following advantages:
 
 - Improved OCR Accuracy
-- Automatic Strategy Selection
+- Automatic Preprocessing Strategy Selection
+- Better Performance under Challenging Lighting Conditions
 - Reduced Manual Parameter Tuning
-- Better Performance under Different Lighting Conditions
-- Modular Integration with Existing ANPR Systems
 - Confidence-Based OCR Decision Making
+- Modular Integration with Larger ANPR Systems
 
 ---
 
 # 🧩 Design Philosophy
 
-The preprocessing module has been designed as an independent component that can be integrated into any Automatic Number Plate Recognition (ANPR) pipeline.
+This preprocessing module has been designed as an independent component of an Automatic Number Plate Recognition (ANPR) pipeline.
 
-By separating preprocessing from detection, APIs, and backend services, the module becomes reusable, maintainable, and easier to extend in future applications.
+Instead of tightly coupling preprocessing with detection or backend services, the module operates independently using a queue-based architecture. This design makes it reusable, scalable, and easy to integrate into larger intelligent transportation systems.
 
 ---
 
 # 🚀 Future Improvements
 
-Although the current preprocessing module achieves strong OCR performance, several enhancements can further improve the project.
+Planned enhancements include:
 
-## Planned Enhancements
-
-- 🎥 Real-time webcam and CCTV support
-- 📹 Video stream processing
+- 🎥 Real-time webcam support
+- 📹 Live video stream processing
 - 🚗 Multi-vehicle simultaneous processing
-- 🌙 Better low-light and night-time enhancement
+- 🌙 Enhanced low-light preprocessing
 - ☁️ Cloud deployment (AWS / Azure / GCP)
 - 🌐 REST API using FastAPI
 - 🖥️ Interactive Web Dashboard
 - 🐳 Docker containerization
-- ⚡ GPU optimization using CUDA
+- ⚡ GPU acceleration using CUDA
 - 🌍 Multi-country license plate recognition
-- 🤖 Deep Learning-based image enhancement models
+- 🤖 AI-based image enhancement models
 
 ---
 
 # 🤝 My Contribution
 
-This repository contains **my individual contribution** to a team-based Automatic Number Plate Recognition (ANPR) project.
+This repository represents **my individual contribution** to a team-based Automatic Number Plate Recognition (ANPR) project.
 
-### My Responsibilities
+### Responsibilities
 
-- Designed and implemented the Self-Optimizing Preprocessing Pipeline.
-- Developed multiple OpenCV preprocessing strategies.
-- Integrated EasyOCR for character recognition.
-- Implemented OCR confidence comparison.
-- Automatically selected the best preprocessing strategy.
-- Applied character correction for common OCR errors.
-- Performed Indian license plate validation.
+- Designed the Self-Optimizing Preprocessing Framework.
+- Implemented multiple OpenCV preprocessing strategies.
+- Integrated EasyOCR for license plate recognition.
+- Developed OCR confidence-based strategy selection.
+- Implemented character correction and validation.
+- Designed the queue-based preprocessing workflow.
 - Prepared project documentation and GitHub repository.
 
-### Note
-
-Vehicle detection, API integration, backend services, and database-related modules were developed by other team members.
-
-This repository focuses exclusively on the preprocessing and OCR enhancement module developed by me.
+> **Note:** This repository focuses exclusively on the preprocessing and OCR enhancement module. Other ANPR components, including backend services, APIs, and database modules, were developed separately as part of the overall team project.
 
 ---
 
 # 📚 References
 
-This project uses the following open-source libraries and frameworks:
+This project uses the following open-source technologies:
 
 - Python
 - OpenCV
@@ -538,7 +521,7 @@ This project uses the following open-source libraries and frameworks:
 - PyTorch
 - Ultralytics YOLOv8
 
-Special thanks to the developers and maintainers of these open-source projects.
+Special thanks to the developers and maintainers of these excellent open-source projects.
 
 ---
 
@@ -546,7 +529,7 @@ Special thanks to the developers and maintainers of these open-source projects.
 
 This project is licensed under the **MIT License**.
 
-See the `LICENSE` file for more details.
+See the `LICENSE` file for more information.
 
 ---
 
@@ -556,33 +539,34 @@ See the `LICENSE` file for more details.
 
 MCA Student
 
-Aspiring AI Engineer | Java Full Stack Developer
+Aspiring Software Engineer | AI & Java Full Stack Developer
 
-🔗 GitHub: https://github.com/sejal13-dev
+**GitHub:**  
+https://github.com/sejal13-dev
 
 ---
 
 # 🙏 Acknowledgements
 
-I would like to express my gratitude to:
+I would like to thank:
 
-- The open-source community for providing excellent tools and libraries.
+- The open-source community for providing outstanding libraries and tools.
 - The Ultralytics team for YOLOv8.
 - The EasyOCR development team.
 - OpenCV contributors.
-- My project guide and faculty members for their valuable guidance.
+- My faculty members and project guide for their valuable guidance.
 - My teammates for their collaboration on the overall ANPR project.
 
 ---
 
 # ⭐ Repository Information
 
-If you found this project useful or interesting:
+If you found this project useful:
 
 - ⭐ Star this repository.
 - 🍴 Fork it for your own experiments.
-- 💡 Feel free to explore the documentation.
-- 🤝 Suggestions and constructive feedback are always welcome.
+- 📝 Explore the documentation.
+- 🤝 Suggestions and feedback are always welcome.
 
 ---
 
@@ -590,6 +574,6 @@ If you found this project useful or interesting:
 
 This repository demonstrates the implementation of a **Self-Optimizing Preprocessing Framework** for Automatic Number Plate Recognition (ANPR).
 
-The primary objective of this work is to improve OCR accuracy by dynamically selecting the most suitable preprocessing strategy using OCR confidence scores.
+The framework improves OCR accuracy by evaluating multiple preprocessing strategies, comparing OCR confidence scores, and automatically selecting the most reliable recognition result.
 
-The project has been designed as a modular component so that it can be integrated into larger ANPR systems, research projects, or intelligent transportation applications.
+The module has been designed as an independent and reusable component that can be integrated into larger ANPR systems, intelligent transportation applications, or future research projects.

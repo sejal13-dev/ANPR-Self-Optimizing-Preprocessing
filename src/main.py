@@ -826,41 +826,41 @@ def output_saver():
 # START THE ANPR SYSTEM
 # ==========================================================
 
-# Create input folder if not present
-os.makedirs("incoming_images", exist_ok=True)
+def main():
+
+    # Create input folder if not present
+    os.makedirs("incoming_images", exist_ok=True)
+
+    # Start folder reader thread
+    reader_thread = threading.Thread(
+        target=folder_reader,
+        args=("incoming_images",),
+        daemon=True
+    )
+
+    reader_thread.start()
+
+    # Start worker thread
+    worker_thread = threading.Thread(
+        target=worker,
+        daemon=True
+    )
+
+    worker_thread.start()
+
+    # Start output saver thread
+    saver_thread = threading.Thread(
+        target=output_saver,
+        daemon=True
+    )
+
+    saver_thread.start()
+
+    print("ANPR System Started Successfully")
+
+    while True:
+        time.sleep(5)
 
 
-# Start folder reader thread
-reader_thread = threading.Thread(
-    target=folder_reader,
-    args=("incoming_images",),
-    daemon=True
-)
-
-reader_thread.start()
-
-
-# Start worker thread
-worker_thread = threading.Thread(
-    target=worker,
-    daemon=True
-)
-
-worker_thread.start()
-
-
-# Start output saver thread
-saver_thread = threading.Thread(
-    target=output_saver,
-    daemon=True
-)
-
-saver_thread.start()
-
-
-print("ANPR System Started Successfully")
-
-
-# Keep program running
-while True:
-    time.sleep(5)
+if __name__ == "__main__":
+    main()
